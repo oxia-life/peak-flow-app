@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Дневник пикфлоуметрии",
+    "slug": "peak-flow-diary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.oxia.peakflowdiary"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.oxia.peakflowdiary"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Дневник пикфлоуметрии",
+      "shortName": "ПСВ Дневник",
+      "description": "Приложение для отслеживания показателей пиковой скорости выдоха (ПСВ)",
+      "lang": "ru",
+      "scope": "/",
+      "startUrl": "/",
+      "display": "standalone",
+      "orientation": "portrait",
+      "backgroundColor": "#ffffff",
+      "themeColor": "#1E4C60",
+      "preferRelatedApplications": false
+    }
+  }
+}
+
+
+
