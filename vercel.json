@@ -1,7 +1,7 @@
 {
   "version": 2,
   "public": true,
-  "buildCommand": "./build.sh",
+  "buildCommand": "npx expo export --platform web && cp -r public/* dist/ || true",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "headers": [
