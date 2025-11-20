@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import AppNavigator from './src/AppNavigator';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   useEffect(() => {
@@ -24,6 +25,8 @@ export default function App() {
     <>
       <StatusBar style="auto" />
       <AppNavigator />
+      {/* Vercel Analytics - работает только на веб */}
+      {Platform.OS === 'web' && <Analytics />}
     </>
   );
 }
