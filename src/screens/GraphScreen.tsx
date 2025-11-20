@@ -75,6 +75,9 @@ export default function GraphScreen() {
 
   const getPeriodDates = (): { start: Date; end: Date } => {
     const today = new Date();
+    // Устанавливаем время на начало дня, чтобы избежать проблем с часовыми поясами
+    today.setHours(0, 0, 0, 0);
+    
     const start = new Date(today);
     const end = new Date(today);
 
@@ -159,10 +162,14 @@ export default function GraphScreen() {
   const getFilteredRecords = (): PEFRecord[] => {
     const { start, end } = getPeriodDates();
     
+    // Преобразуем даты диапазона в строки формата YYYY-MM-DD для корректного сравнения
+    const startStr = start.toISOString().split('T')[0];
+    const endStr = end.toISOString().split('T')[0];
+    
     return records
       .filter((record) => {
-        const recordDate = new Date(record.date);
-        return recordDate >= start && recordDate <= end;
+        // Сравниваем строки дат напрямую, чтобы избежать проблем с часовыми поясами
+        return record.date >= startStr && record.date <= endStr;
       })
       .sort((a, b) => {
         const timeA = new Date(`${a.date}T${a.time}`).getTime();
