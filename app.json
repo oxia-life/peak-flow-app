@@ -34,7 +34,8 @@
       "orientation": "portrait",
       "backgroundColor": "#ffffff",
       "themeColor": "#1E4C60",
-      "preferRelatedApplications": false
+      "preferRelatedApplications": false,
+      "bundler": "metro"
     }
   }
 }
