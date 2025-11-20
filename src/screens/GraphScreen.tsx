@@ -286,8 +286,11 @@ export default function GraphScreen() {
       if (range === 'week') {
         const dayNames = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
         for (let i = 0; i < 7; i++) {
-          const date = new Date(start);
-          date.setDate(start.getDate() + i);
+          // Создаем дату правильно, избегая проблем с временными зонами
+          const year = start.getFullYear();
+          const month = start.getMonth();
+          const day = start.getDate() + i;
+          const date = new Date(year, month, day);
           const dateStr = date.toISOString().split('T')[0];
           const dayNum = date.getDate();
           const dayName = dayNames[date.getDay()];
@@ -296,8 +299,11 @@ export default function GraphScreen() {
         }
       } else if (range === 'month') {
         for (let i = 0; i < 30; i++) {
-          const date = new Date(start);
-          date.setDate(start.getDate() + i);
+          // Создаем дату правильно, избегая проблем с временными зонами
+          const year = start.getFullYear();
+          const month = start.getMonth();
+          const day = start.getDate() + i;
+          const date = new Date(year, month, day);
           const dateStr = date.toISOString().split('T')[0];
           const label = `${date.getDate()}`;
           timeScale.push({ date: dateStr, label });
@@ -535,8 +541,11 @@ export default function GraphScreen() {
         // 7 дней текущего периода
         const dayNames = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
         for (let i = 0; i < 7; i++) {
-          const date = new Date(start);
-          date.setDate(start.getDate() + i);
+          // Создаем дату правильно, избегая проблем с временными зонами
+          const year = start.getFullYear();
+          const month = start.getMonth();
+          const day = start.getDate() + i;
+          const date = new Date(year, month, day);
           const dateStr = date.toISOString().split('T')[0];
           const dayNum = date.getDate();
           const dayName = dayNames[date.getDay()];
@@ -546,8 +555,11 @@ export default function GraphScreen() {
       } else if (range === 'month') {
         // 30 дней текущего периода
         for (let i = 0; i < 30; i++) {
-          const date = new Date(start);
-          date.setDate(start.getDate() + i);
+          // Создаем дату правильно, избегая проблем с временными зонами
+          const year = start.getFullYear();
+          const month = start.getMonth();
+          const day = start.getDate() + i;
+          const date = new Date(year, month, day);
           const dateStr = date.toISOString().split('T')[0];
           const label = `${date.getDate()}`;
           timeScale.push({ date: dateStr, label });
