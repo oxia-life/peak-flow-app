@@ -1,0 +1,10 @@
+# Ignore dev dependencies
+node_modules
+
+# Ignore source files
+src
+assets
+
+# Keep only build output
+!dist
+
