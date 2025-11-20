@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import AppNavigator from './src/AppNavigator';
-import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   useEffect(() => {
@@ -19,14 +18,22 @@ export default function App() {
           });
       });
     }
+
+    // Vercel Analytics - работает только на веб
+    if (Platform.OS === 'web') {
+      import('@vercel/analytics').then(({ inject }) => {
+        inject();
+        console.log('✅ Vercel Analytics initialized');
+      }).catch(error => {
+        console.log('❌ Vercel Analytics failed:', error);
+      });
+    }
   }, []);
 
   return (
     <>
       <StatusBar style="auto" />
       <AppNavigator />
-      {/* Vercel Analytics - работает только на веб */}
-      {Platform.OS === 'web' && <Analytics />}
     </>
   );
 }
