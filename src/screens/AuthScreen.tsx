@@ -19,8 +19,28 @@ export default function AuthScreen() {
   }, [countdown]);
 
   const validateEmail = (email: string): boolean => {
+    // Базовая проверка формата
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+    
+    // Проверка на популярные опечатки в доменах
+    const commonTypos = [
+      'gmial.com', 'gmai.com', 'gmil.com', 'gmaul.com', // Gmail
+      'yandx.ru', 'yandex.ru', 'ya.ru', 'yandex.com', // Yandex - допустимые
+      'mail.r', 'maiil.ru', 'mal.ru', // Mail.ru
+      'outlok.com', 'outook.com', // Outlook
+    ];
+    
+    const domain = email.split('@')[1]?.toLowerCase();
+    const suspiciousTypos = ['gmial.com', 'gmai.com', 'gmil.com', 'gmaul.com', 'yandx.ru', 'mail.r', 'maiil.ru', 'mal.ru', 'outlok.com', 'outook.com'];
+    
+    if (suspiciousTypos.includes(domain)) {
+      return false;
+    }
+    
+    return true;
   };
 
   const handleSendMagicLink = async () => {
