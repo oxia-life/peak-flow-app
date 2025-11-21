@@ -25,15 +25,24 @@ export default function AuthScreen() {
       return false;
     }
     
-    // Проверка на популярные опечатки в доменах
-    const commonTypos = [
-      'gmial.com', 'gmai.com', 'gmil.com', 'gmaul.com', // Gmail
-      'yandx.ru', 'yandex.ru', 'ya.ru', 'yandex.com', // Yandex - допустимые
-      'mail.r', 'maiil.ru', 'mal.ru', // Mail.ru
-      'outlok.com', 'outook.com', // Outlook
-    ];
+    // Блокируем тестовые и временные email
+    const blockedPrefixes = ['test', 'demo', 'example', 'temp', 'temporary', 'fake', 'spam'];
+    const blockedDomains = ['tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email', 'mailinator.com'];
     
+    const localPart = email.split('@')[0]?.toLowerCase();
     const domain = email.split('@')[1]?.toLowerCase();
+    
+    // Проверка на тестовые префиксы
+    if (blockedPrefixes.some(prefix => localPart.startsWith(prefix))) {
+      return false;
+    }
+    
+    // Проверка на временные домены
+    if (blockedDomains.includes(domain)) {
+      return false;
+    }
+    
+    // Проверка на популярные опечатки в доменах
     const suspiciousTypos = ['gmial.com', 'gmai.com', 'gmil.com', 'gmaul.com', 'yandx.ru', 'mail.r', 'maiil.ru', 'mal.ru', 'outlok.com', 'outook.com'];
     
     if (suspiciousTypos.includes(domain)) {
