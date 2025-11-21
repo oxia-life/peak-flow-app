@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, Pressable, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, Pressable, Modal, ScrollView, Platform } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ScreenContainer from '../../components/ScreenContainer';
 import PrimaryButton from '../../components/PrimaryButton';
@@ -136,6 +136,17 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
     try {
       await Storage.saveProfile(profile);
       console.log('Profile saved successfully');
+      
+      // Отслеживание регистрации в Яндекс.Метрике (только для веб-версии)
+      if (Platform.OS === 'web' && typeof window !== 'undefined' && (window as any).ym) {
+        try {
+          (window as any).ym(105448967, 'reachGoal', 'peakflow_signup');
+          console.log('Yandex.Metrika goal "peakflow_signup" sent');
+        } catch (metrikaError) {
+          console.error('Yandex.Metrika error:', metrikaError);
+        }
+      }
+      
       // AppNavigator will detect the profile and navigate automatically
     } catch (error) {
       Alert.alert('Ошибка', 'Не удалось сохранить профиль');
@@ -292,6 +303,13 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
             <Text style={styles.modalParagraph}>
               Ваши данные защищены и не передаются третьим лицам. Вы можете в любой момент
               удалить все данные через настройки приложения.
+            </Text>
+
+            <Text style={styles.modalParagraph}>
+              Для анализа использования приложения и улучшения качества сервиса используется
+              Яндекс.Метрика. Собираются только обезличенные данные о взаимодействии с
+              приложением (клики, просмотры страниц). Личные медицинские данные не передаются
+              в Яндекс.Метрику.
             </Text>
           </ScrollView>
         </View>
