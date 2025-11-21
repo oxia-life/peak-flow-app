@@ -63,9 +63,8 @@ export default function AddEntryScreen({ navigation }: AddEntryScreenProps) {
         sputum,
       };
 
-      // Получаем существующие записи и добавляем новую
-      const existingRecords = await Storage.getAllRecords();
-      await Storage.saveRecords([...existingRecords, newRecord]);
+      // Сохраняем только новую запись (безопасно, не удаляет существующие)
+      await Storage.saveRecord(newRecord);
 
       // Возвращаемся назад
       navigation.goBack();

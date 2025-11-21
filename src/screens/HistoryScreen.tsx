@@ -140,11 +140,8 @@ export default function HistoryScreen() {
         sputum: editSymptoms.sputum,
       };
 
-      const allRecords = await Storage.getAllRecords();
-      const updatedRecords = allRecords.map((r) =>
-        r.id === selectedRecord.id ? updatedRecord : r
-      );
-      await Storage.saveRecords(updatedRecords);
+      // Обновляем только одну запись (безопасно)
+      await Storage.updateRecord(updatedRecord);
 
       setEditModalVisible(false);
       loadData();
@@ -181,9 +178,8 @@ export default function HistoryScreen() {
     if (!confirmDelete) return;
 
     try {
-      const allRecords = await Storage.getAllRecords();
-      const updatedRecords = allRecords.filter((r) => r.id !== selectedRecord.id);
-      await Storage.saveRecords(updatedRecords);
+      // Удаляем только одну запись (безопасно)
+      await Storage.deleteRecord(selectedRecord.id);
 
       setEditModalVisible(false);
       loadData();

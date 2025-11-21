@@ -153,7 +153,47 @@ class SupabaseService {
   // ==================== ЗАПИСИ PEF ====================
 
   /**
-   * Сохранить записи PEF
+   * Сохранить ОДНУ новую запись PEF (безопасно, не удаляет существующие)
+   */
+  async saveRecord(record: PEFRecord): Promise<{ error: Error | null }> {
+    try {
+      const user = await this.getCurrentUser();
+      if (!user) {
+        console.error('saveRecord: No user authenticated');
+        return { error: new Error('User not authenticated') };
+      }
+
+      console.log('saveRecord: Saving single record:', record);
+
+      const recordWithUserId = {
+        id: record.id,
+        user_id: user.id,
+        date: record.date,
+        time: record.time,
+        value: record.value,
+        cough: record.cough,
+        breathlessness: record.breathlessness,
+        sputum: record.sputum,
+      };
+
+      const { error } = await supabase.from('pef_records').insert([recordWithUserId]);
+
+      if (error) {
+        console.error('saveRecord: Supabase error:', error);
+      } else {
+        console.log('saveRecord: Successfully saved record');
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('saveRecord: Exception:', error);
+      return { error: error as Error };
+    }
+  }
+
+  /**
+   * ⚠️ ОПАСНО! Перезаписывает ВСЕ записи пользователя (для синхронизации)
+   * Используйте saveRecord() для добавления одной записи!
    */
   async saveRecords(records: PEFRecord[]): Promise<{ error: Error | null }> {
     try {
@@ -161,6 +201,8 @@ class SupabaseService {
       if (!user) {
         return { error: new Error('User not authenticated') };
       }
+
+      console.warn('saveRecords: ⚠️ REPLACING ALL USER RECORDS with', records.length, 'records');
 
       // Удаляем старые записи пользователя
       await supabase.from('pef_records').delete().eq('user_id', user.id);
@@ -249,6 +291,45 @@ class SupabaseService {
   }
 
   /**
+   * Обновить существующую запись PEF
+   */
+  async updateRecord(record: PEFRecord): Promise<{ error: Error | null }> {
+    try {
+      const user = await this.getCurrentUser();
+      if (!user) {
+        console.error('updateRecord: No user authenticated');
+        return { error: new Error('User not authenticated') };
+      }
+
+      console.log('updateRecord: Updating record:', record);
+
+      const { error } = await supabase
+        .from('pef_records')
+        .update({
+          date: record.date,
+          time: record.time,
+          value: record.value,
+          cough: record.cough,
+          breathlessness: record.breathlessness,
+          sputum: record.sputum,
+        })
+        .eq('id', record.id)
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('updateRecord: Supabase error:', error);
+      } else {
+        console.log('updateRecord: Successfully updated record');
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('updateRecord: Exception:', error);
+      return { error: error as Error };
+    }
+  }
+
+  /**
    * Удалить запись PEF
    */
   async deleteRecord(recordId: string): Promise<{ error: Error | null }> {
@@ -258,11 +339,19 @@ class SupabaseService {
         return { error: new Error('User not authenticated') };
       }
 
+      console.log('deleteRecord: Deleting record:', recordId);
+
       const { error } = await supabase
         .from('pef_records')
         .delete()
         .eq('id', recordId)
         .eq('user_id', user.id);
+
+      if (error) {
+        console.error('deleteRecord: Supabase error:', error);
+      } else {
+        console.log('deleteRecord: Successfully deleted record');
+      }
 
       return { error };
     } catch (error) {

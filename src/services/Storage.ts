@@ -67,7 +67,40 @@ class StorageService {
   }
 
   /**
-   * Save all PEF records (replaces existing)
+   * Save ONE new PEF record (safely adds without deleting existing)
+   * Теперь данные сохраняются в Supabase
+   */
+  async saveRecord(record: PEFRecord): Promise<void> {
+    try {
+      const { error } = await SupabaseService.saveRecord(record);
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error saving record:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update existing PEF record
+   * Теперь данные обновляются в Supabase
+   */
+  async updateRecord(record: PEFRecord): Promise<void> {
+    try {
+      const { error } = await SupabaseService.updateRecord(record);
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error updating record:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * ⚠️ DANGEROUS! Save all PEF records (replaces ALL existing records)
+   * Use saveRecord() to add a single record instead!
    * Теперь данные сохраняются в Supabase
    */
   async saveRecords(records: PEFRecord[]): Promise<void> {
