@@ -1,7 +1,7 @@
 {
   "version": 2,
   "public": true,
-  "buildCommand": "npx expo export --platform web && cp -r public/* dist/ || true",
+  "buildCommand": "npx expo export --platform web && cp -r public/* dist/ && node scripts/inject-html.js || true",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "headers": [
