@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet, Platform } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -326,22 +326,10 @@ export default function AppNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [hasOnboarded, setHasOnboarded] = useState(false);
-  const [loadingError, setLoadingError] = useState(false);
 
   useEffect(() => {
-    // Таймаут на случай зависания загрузки
-    const loadingTimeout = setTimeout(() => {
-      if (isLoading) {
-        console.error('Loading timeout - app stuck on loading screen');
-        setLoadingError(true);
-        setIsLoading(false);
-      }
-    }, 10000); // 10 секунд максимум на загрузку
-    
     // Проверка авторизации и онбординга
     checkAuthAndOnboarding();
-    
-    return () => clearTimeout(loadingTimeout);
 
     // Подписка на изменения авторизации
     const authSubscription = SupabaseService.onAuthStateChange((newSession) => {
@@ -368,55 +356,48 @@ export default function AppNavigator() {
 
   const checkAuthAndOnboarding = async () => {
     try {
-      console.log('[AppNavigator] Starting auth check...');
+      console.log('Checking auth and onboarding...');
       
       // На веб-платформе даем Supabase время обработать токен из URL
       if (Platform.OS === 'web') {
-        console.log('[AppNavigator] Platform: web');
         // Проверяем, есть ли токен в URL (magic link)
         const urlParams = new URLSearchParams(window.location.search);
         const hasToken = urlParams.has('token') || window.location.hash.includes('access_token');
         
         if (hasToken) {
-          console.log('[AppNavigator] Token detected in URL, waiting 1.5s for processing...');
+          console.log('Token detected in URL, waiting for Supabase to process...');
           // Даем Supabase время обработать токен
           await new Promise(resolve => setTimeout(resolve, 1500));
         }
       }
       
-      console.log('[AppNavigator] Getting session from Supabase...');
       const currentSession = await SupabaseService.getSession();
-      console.log('[AppNavigator] Session result:', currentSession ? 'exists' : 'none');
+      console.log('Current session:', currentSession ? 'exists' : 'none');
       setSession(currentSession);
       
       if (currentSession) {
         // Проверяем, есть ли профиль в базе данных
-        console.log('[AppNavigator] Fetching profile...');
         const profile = await Storage.getProfile();
-        console.log('[AppNavigator] Profile result:', profile ? 'exists' : 'none');
+        console.log('Profile exists:', !!profile);
         
         // Если профиля нет - нужен онбординг
         if (!profile) {
-          console.log('[AppNavigator] No profile - showing onboarding');
+          console.log('No profile found - need onboarding');
           setHasOnboarded(false);
         } else {
           // Профиль есть - онбординг пройден
-          console.log('[AppNavigator] Profile found - onboarding completed');
+          console.log('Profile found - onboarding completed');
           setHasOnboarded(true);
         }
       } else {
-        console.log('[AppNavigator] No session - showing auth screen');
         setHasOnboarded(false);
       }
-      
-      console.log('[AppNavigator] Auth check completed successfully');
     } catch (error) {
-      console.error('[AppNavigator] Error in checkAuthAndOnboarding:', error);
+      console.error('Error checking auth and onboarding:', error);
       // При ошибке всё равно показываем UI (экран авторизации)
       setSession(null);
       setHasOnboarded(false);
     } finally {
-      console.log('[AppNavigator] Setting isLoading to false');
       setIsLoading(false);
     }
   };
@@ -448,56 +429,11 @@ export default function AppNavigator() {
     return () => clearInterval(interval);
   }, [hasOnboarded, session]);
 
-  const handleRetry = async () => {
-    setIsLoading(true);
-    setLoadingError(false);
-    
-    // Очистить проблемные данные из localStorage
-    if (Platform.OS === 'web') {
-      try {
-        // Очищаем только auth данные, но не весь storage
-        const keysToRemove = Object.keys(localStorage).filter(key => 
-          key.includes('supabase') || key.includes('sb-')
-        );
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-        console.log('Cleared localStorage auth data');
-      } catch (e) {
-        console.error('Error clearing storage:', e);
-      }
-    }
-    
-    await checkAuthAndOnboarding();
-  };
-
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5' }}>
         <ActivityIndicator size="large" color="#1E4C60" />
         <Text style={{ marginTop: 16, fontSize: 16, color: '#666' }}>Загрузка...</Text>
-      </View>
-    );
-  }
-  
-  if (loadingError) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5', padding: 20 }}>
-        <Text style={{ fontSize: 18, color: '#333', marginBottom: 8, textAlign: 'center' }}>
-          Не удалось загрузить приложение
-        </Text>
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 24, textAlign: 'center' }}>
-          Попробуйте перезагрузить страницу или очистить кеш браузера
-        </Text>
-        <Pressable
-          onPress={handleRetry}
-          style={{
-            backgroundColor: '#1E4C60',
-            paddingHorizontal: 24,
-            paddingVertical: 12,
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ color: '#fff', fontSize: 16 }}>Попробовать снова</Text>
-        </Pressable>
       </View>
     );
   }
