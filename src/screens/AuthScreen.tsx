@@ -168,12 +168,6 @@ export default function AuthScreen() {
             </View>
           )}
 
-          {/* Дополнительная информация */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Ваши данные надежно защищены и не будут переданы третьим лицам
-            </Text>
-          </View>
         </View>
       </KeyboardAvoidingView>
     </ScreenContainer>
@@ -258,18 +252,6 @@ const styles = StyleSheet.create({
     fontWeight: FONT_WEIGHTS.regular,
     color: '#666',
     lineHeight: 20,
-  },
-  footer: {
-    marginTop: 'auto',
-    paddingTop: 24,
-  },
-  footerText: {
-    fontFamily: FONTS.regular,
-    fontSize: 13,
-    fontWeight: FONT_WEIGHTS.regular,
-    color: '#999',
-    textAlign: 'center',
-    lineHeight: 18,
   },
 });
 

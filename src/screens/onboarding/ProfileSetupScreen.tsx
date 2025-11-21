@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, Pressable, Modal, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, Pressable, Modal, ScrollView, Platform, Linking } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ScreenContainer from '../../components/ScreenContainer';
 import PrimaryButton from '../../components/PrimaryButton';
@@ -20,7 +20,6 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
   const [normMethod, setNormMethod] = useState<'auto' | 'manual'>('auto');
   const [manualNorm, setManualNorm] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   
   // Ошибки валидации
   const [birthDateError, setBirthDateError] = useState('');
@@ -247,8 +246,12 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
             <Text style={styles.checkboxLabel}>
               Я ознакомлен(а) и согласен(на) с{' '}
             </Text>
-            <Pressable onPress={() => setShowPrivacyModal(true)}>
-              <Text style={styles.linkText}>условиями обработки данных</Text>
+            <Pressable onPress={() => Linking.openURL('https://oxia.life/page97307316.html')}>
+              <Text style={styles.linkText}>Политикой конфиденциальности</Text>
+            </Pressable>
+            <Text style={styles.checkboxLabel}> и </Text>
+            <Pressable onPress={() => Linking.openURL('https://oxia.life/page97310226.html')}>
+              <Text style={styles.linkText}>Пользовательским соглашением</Text>
             </Pressable>
           </View>
         </View>
@@ -261,59 +264,6 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
           disabled={!agreed}
         />
       </View>
-
-      {/* Модальное окно с политикой конфиденциальности */}
-      <Modal
-        visible={showPrivacyModal}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setShowPrivacyModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Обработка персональных данных</Text>
-            <Pressable
-              onPress={() => setShowPrivacyModal(false)}
-              style={({ pressed }) => [
-                styles.modalCloseButton,
-                pressed && styles.modalCloseButtonPressed
-              ]}
-            >
-              <Text style={styles.modalCloseButtonText}>✕</Text>
-            </Pressable>
-          </View>
-          
-          <ScrollView style={styles.modalContent} contentContainerStyle={styles.modalContentContainer}>
-            <Text style={styles.modalParagraph}>
-              Все данные, которые вы вводите в приложение, надежно защищены и синхронизируются
-              с облачным хранилищем. Это обеспечивает сохранность ваших данных и доступ к ним
-              с любого устройства.
-            </Text>
-
-            <Text style={styles.modalParagraph}>
-              Приложение использует следующие данные:
-            </Text>
-
-            <Text style={styles.modalListItem}>• Электронная почта (для авторизации)</Text>
-            <Text style={styles.modalListItem}>• Пол и год рождения (для расчёта нормы ПСВ)</Text>
-            <Text style={styles.modalListItem}>• Рост (для расчёта нормы ПСВ)</Text>
-            <Text style={styles.modalListItem}>• Показатели пикфлоуметрии</Text>
-            <Text style={styles.modalListItem}>• Симптомы (кашель, одышка, мокрота)</Text>
-
-            <Text style={styles.modalParagraph}>
-              Ваши данные защищены и не передаются третьим лицам. Вы можете в любой момент
-              удалить все данные через настройки приложения.
-            </Text>
-
-            <Text style={styles.modalParagraph}>
-              Для анализа использования приложения и улучшения качества сервиса используется
-              Яндекс.Метрика. Собираются только обезличенные данные о взаимодействии с
-              приложением (клики, просмотры страниц). Личные медицинские данные не передаются
-              в Яндекс.Метрику.
-            </Text>
-          </ScrollView>
-        </View>
-      </Modal>
     </ScreenContainer>
   );
 }
@@ -466,68 +416,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 20,
-  },
-  // Стили для модального окна
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#FAFAFA',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    paddingTop: 60,
-    borderBottomWidth: 0,
-  },
-  modalTitle: {
-    fontFamily: FONTS.bold,
-    fontSize: 24,
-    fontWeight: FONT_WEIGHTS.bold,
-    color: '#333',
-    flex: 1,
-  },
-  modalCloseButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 12,
-  },
-  modalCloseButtonPressed: {
-    backgroundColor: '#E0E0E0',
-  },
-  modalCloseButtonText: {
-    fontFamily: FONTS.regular,
-    fontSize: 20,
-    color: '#666',
-    fontWeight: FONT_WEIGHTS.regular,
-  },
-  modalContent: {
-    flex: 1,
-  },
-  modalContentContainer: {
-    padding: 20,
-  },
-  modalParagraph: {
-    fontFamily: FONTS.regular,
-    fontSize: 15,
-    fontWeight: FONT_WEIGHTS.regular,
-    color: '#666',
-    lineHeight: 22,
-    marginBottom: 16,
-  },
-  modalListItem: {
-    fontFamily: FONTS.regular,
-    fontSize: 15,
-    fontWeight: FONT_WEIGHTS.regular,
-    color: '#666',
-    lineHeight: 22,
-    marginBottom: 8,
-    marginLeft: 8,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Alert, Platform, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Alert, Platform, TextInput, Pressable, ScrollView, ActivityIndicator, Linking } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Path } from 'react-native-svg';
 import ScreenContainer from '../components/ScreenContainer';
@@ -625,6 +625,14 @@ export default function SettingsScreen() {
           <Text style={styles.sectionText}>
             Приложение для отслеживания показателей пиковой скорости выдоха (ПСВ)
           </Text>
+          <View style={styles.linksContainer}>
+            <Pressable onPress={() => Linking.openURL('https://oxia.life/page97307316.html')}>
+              <Text style={styles.linkText}>Политика конфиденциальности</Text>
+            </Pressable>
+            <Pressable onPress={() => Linking.openURL('https://oxia.life/page97310226.html')} style={{marginTop: 8}}>
+              <Text style={styles.linkText}>Пользовательское соглашение</Text>
+            </Pressable>
+          </View>
           
           <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Данные</Text>
           <Text style={styles.sectionText}>
@@ -844,6 +852,16 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 22,
     marginBottom: 8,
+  },
+  linksContainer: {
+    marginTop: 12,
+  },
+  linkText: {
+    fontFamily: FONTS.regular,
+    fontSize: 15,
+    fontWeight: FONT_WEIGHTS.regular,
+    color: '#007AFF',
+    textDecorationLine: 'underline',
   },
   logoutSection: {
     paddingHorizontal: 16,
