@@ -13,7 +13,7 @@ class SupabaseService {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window?.location?.origin || 'peakflowdiary://auth',
+          emailRedirectTo: 'https://peakflow.oxia.life',
         },
       });
       return { error };
