@@ -336,8 +336,14 @@ export default function AppNavigator() {
       console.log('Auth state changed:', newSession ? 'signed in' : 'signed out');
       setSession(newSession);
       if (newSession) {
+        console.log('User authenticated, checking onboarding...');
         // При успешной авторизации проверяем онбординг
         checkOnboardingStatus();
+        
+        // Очищаем URL от токена после успешной авторизации (веб)
+        if (Platform.OS === 'web' && window.location.search.includes('token')) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
       }
     });
 
@@ -351,6 +357,20 @@ export default function AppNavigator() {
   const checkAuthAndOnboarding = async () => {
     try {
       console.log('Checking auth and onboarding...');
+      
+      // На веб-платформе даем Supabase время обработать токен из URL
+      if (Platform.OS === 'web') {
+        // Проверяем, есть ли токен в URL (magic link)
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasToken = urlParams.has('token') || window.location.hash.includes('access_token');
+        
+        if (hasToken) {
+          console.log('Token detected in URL, waiting for Supabase to process...');
+          // Даем Supabase время обработать токен
+          await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+      }
+      
       const currentSession = await SupabaseService.getSession();
       console.log('Current session:', currentSession ? 'exists' : 'none');
       setSession(currentSession);
