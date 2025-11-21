@@ -19,13 +19,13 @@ export default function App() {
       });
     }
 
-    // Vercel Analytics - работает только на веб
+    // Web-only features
     if (Platform.OS === 'web') {
+      // Vercel Analytics
       try {
-        // Используем динамический импорт с webpackChunkName
         const loadAnalytics = async () => {
           try {
-            const analytics = await import(/* webpackChunkName: "vercel-analytics" */ '@vercel/analytics');
+            const analytics = await import('@vercel/analytics');
             if (analytics && analytics.inject) {
               analytics.inject();
               console.log('✅ Vercel Analytics initialized');
@@ -39,8 +39,34 @@ export default function App() {
         console.log('❌ Vercel Analytics import failed:', error);
       }
 
-      // Yandex.Metrika загружается из HTML (web/index.html)
-      console.log('ℹ️ Yandex.Metrika loads from HTML template');
+      // Yandex.Metrika
+      try {
+        // Инициализируем функцию-заглушку
+        (window as any).ym = (window as any).ym || function() {
+          ((window as any).ym.a = (window as any).ym.a || []).push(arguments);
+        };
+        (window as any).ym.l = 1 * new Date();
+        
+        // Загружаем скрипт
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = 'https://mc.yandex.ru/metrika/tag.js';
+        script.onload = () => console.log('✅ Yandex.Metrika loaded');
+        script.onerror = () => console.log('❌ Yandex.Metrika failed');
+        document.head.appendChild(script);
+        
+        // Инициализируем счетчик
+        (window as any).ym(105448967, 'init', {
+          clickmap: true,
+          trackLinks: true,
+          accurateTrackBounce: true
+        });
+        
+        console.log('✅ Yandex.Metrika initialized');
+      } catch (error) {
+        console.log('❌ Yandex.Metrika error:', error);
+      }
     }
   }, []);
 
