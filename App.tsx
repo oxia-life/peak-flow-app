@@ -36,24 +36,31 @@ export default function App() {
 
       // Yandex.Metrika - работает только на веб
       try {
-        // Добавляем скрипт Яндекс.Метрики
+        // Инициализируем функцию ym до загрузки скрипта
+        (window as any).ym = (window as any).ym || function() {
+          ((window as any).ym.a = (window as any).ym.a || []).push(arguments);
+        };
+        (window as any).ym.l = 1 * new Date();
+        
+        // Загружаем скрипт Яндекс.Метрики
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.async = true;
-        script.innerHTML = `
-          (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-          })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105448967', 'ym');
-          ym(105448967, 'init', {
-            clickmap: true,
-            trackLinks: true,
-            accurateTrackBounce: true
-          });
-        `;
+        script.src = 'https://mc.yandex.ru/metrika/tag.js';
+        script.onload = () => {
+          console.log('✅ Yandex.Metrika script loaded');
+        };
+        script.onerror = () => {
+          console.log('❌ Yandex.Metrika script failed to load');
+        };
         document.head.appendChild(script);
+        
+        // Инициализируем счетчик
+        (window as any).ym(105448967, 'init', {
+          clickmap: true,
+          trackLinks: true,
+          accurateTrackBounce: true
+        });
         
         // Добавляем noscript fallback
         const noscript = document.createElement('noscript');
