@@ -21,12 +21,18 @@ export default function App() {
 
     // Vercel Analytics - работает только на веб
     if (Platform.OS === 'web') {
-      import('@vercel/analytics').then(({ inject }) => {
-        inject();
-        console.log('✅ Vercel Analytics initialized');
-      }).catch(error => {
-        console.log('❌ Vercel Analytics failed:', error);
-      });
+      try {
+        import('@vercel/analytics').then((module) => {
+          if (module && module.inject) {
+            module.inject();
+            console.log('✅ Vercel Analytics initialized');
+          }
+        }).catch(error => {
+          console.log('❌ Vercel Analytics failed:', error);
+        });
+      } catch (error) {
+        console.log('❌ Vercel Analytics import failed:', error);
+      }
 
       // Yandex.Metrika - работает только на веб
       try {
@@ -42,12 +48,9 @@ export default function App() {
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
           })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105448967', 'ym');
           ym(105448967, 'init', {
-            ssr: true,
-            webvisor: true,
             clickmap: true,
-            ecommerce: "dataLayer",
-            accurateTrackBounce: true,
-            trackLinks: true
+            trackLinks: true,
+            accurateTrackBounce: true
           });
         `;
         document.head.appendChild(script);
