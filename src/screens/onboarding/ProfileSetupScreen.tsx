@@ -137,13 +137,28 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
       console.log('Profile saved successfully');
       
       // Отслеживание регистрации в Яндекс.Метрике (только для веб-версии)
-      if (Platform.OS === 'web' && typeof window !== 'undefined' && (window as any).ym) {
-        try {
-          (window as any).ym(105448967, 'reachGoal', 'peakflow_signup');
-          console.log('Yandex.Metrika goal "peakflow_signup" sent');
-        } catch (metrikaError) {
-          console.error('Yandex.Metrika error:', metrikaError);
-        }
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        const sendMetrikaGoal = async (retries = 3) => {
+          for (let i = 0; i < retries; i++) {
+            if ((window as any).ym) {
+              try {
+                (window as any).ym(105448967, 'reachGoal', 'peakflow_signup');
+                console.log(`✅ Yandex.Metrika goal "peakflow_signup" sent (attempt ${i + 1})`);
+                return; // Успешно отправлено
+              } catch (metrikaError) {
+                console.error('Yandex.Metrika error:', metrikaError);
+              }
+            } else {
+              console.log(`⏳ Waiting for Yandex.Metrika (attempt ${i + 1}/${retries})...`);
+            }
+            // Ждем 500ms перед повторной попыткой
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+          console.warn('❌ Failed to send Yandex.Metrika goal after', retries, 'attempts');
+        };
+        
+        // Запускаем отправку асинхронно
+        sendMetrikaGoal();
       }
       
       // AppNavigator will detect the profile and navigate automatically

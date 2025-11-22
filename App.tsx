@@ -39,31 +39,47 @@ export default function App() {
         console.log('❌ Vercel Analytics import failed:', error);
       }
 
-      // Yandex.Metrika
+      // Yandex.Metrika - полная реализация с оригинальными параметрами
       try {
-        // Инициализируем функцию-заглушку
+        // Инициализируем функцию-заглушку (из оригинального кода Яндекса)
         (window as any).ym = (window as any).ym || function() {
           ((window as any).ym.a = (window as any).ym.a || []).push(arguments);
         };
         (window as any).ym.l = 1 * new Date();
         
-        // Загружаем скрипт
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.async = true;
-        script.src = 'https://mc.yandex.ru/metrika/tag.js';
-        script.onload = () => console.log('✅ Yandex.Metrika loaded');
-        script.onerror = () => console.log('❌ Yandex.Metrika failed');
-        document.head.appendChild(script);
+        // Проверяем, не загружен ли уже скрипт
+        const existingScript = Array.from(document.scripts).find(
+          s => s.src === 'https://mc.yandex.ru/metrika/tag.js?id=105448967'
+        );
         
-        // Инициализируем счетчик
+        if (!existingScript) {
+          // Загружаем скрипт с ID (оригинальный подход Яндекса)
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.async = true;
+          script.src = 'https://mc.yandex.ru/metrika/tag.js?id=105448967';
+          script.onload = () => console.log('✅ Yandex.Metrika script loaded');
+          script.onerror = (e) => console.log('❌ Yandex.Metrika script failed:', e);
+          
+          const firstScript = document.getElementsByTagName('script')[0];
+          if (firstScript && firstScript.parentNode) {
+            firstScript.parentNode.insertBefore(script, firstScript);
+          } else {
+            document.head.appendChild(script);
+          }
+        }
+        
+        // Инициализируем счетчик с ПОЛНЫМИ параметрами от Яндекса
         (window as any).ym(105448967, 'init', {
+          ssr: true,
+          webvisor: true,
           clickmap: true,
           trackLinks: true,
-          accurateTrackBounce: true
+          accurateTrackBounce: true,
+          ecommerce: "dataLayer"
         });
         
-        console.log('✅ Yandex.Metrika initialized');
+        console.log('✅ Yandex.Metrika initialized with full params');
       } catch (error) {
         console.log('❌ Yandex.Metrika error:', error);
       }
