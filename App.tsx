@@ -21,22 +21,17 @@ export default function App() {
 
     // Web-only features
     if (Platform.OS === 'web') {
-      // Vercel Analytics
+      // Vercel Analytics - через <script> тег
       try {
-        const loadAnalytics = async () => {
-          try {
-            const analytics = await import('@vercel/analytics');
-            if (analytics && analytics.inject) {
-              analytics.inject();
-              console.log('✅ Vercel Analytics initialized');
-            }
-          } catch (err) {
-            console.log('❌ Vercel Analytics load failed:', err);
-          }
-        };
-        loadAnalytics();
+        const script = document.createElement('script');
+        script.defer = true;
+        script.src = 'https://va.vercel-scripts.com/v1/script.debug.js';
+        script.setAttribute('data-endpoint', 'https://vitals.vercel-insights.com/v1/vitals');
+        script.onload = () => console.log('✅ Vercel Analytics loaded');
+        script.onerror = (e) => console.log('❌ Vercel Analytics failed:', e);
+        document.head.appendChild(script);
       } catch (error) {
-        console.log('❌ Vercel Analytics import failed:', error);
+        console.log('❌ Vercel Analytics error:', error);
       }
 
       // Yandex.Metrika - полная реализация с оригинальными параметрами
