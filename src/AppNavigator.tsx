@@ -326,6 +326,7 @@ export default function AppNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [hasOnboarded, setHasOnboarded] = useState(false);
+  const [profileCache, setProfileCache] = useState<any>(null); // Кеш профиля
 
   useEffect(() => {
     // Проверка авторизации и онбординга
@@ -333,10 +334,10 @@ export default function AppNavigator() {
 
     // Подписка на изменения авторизации
     const authSubscription = SupabaseService.onAuthStateChange((newSession) => {
-      console.log('Auth state changed:', newSession ? 'signed in' : 'signed out');
+      console.log('[Navigator] Auth state changed:', newSession ? 'signed in' : 'signed out');
       setSession(newSession);
       if (newSession) {
-        console.log('User authenticated, checking onboarding...');
+        console.log('[Navigator] User authenticated, checking onboarding...');
         // При успешной авторизации проверяем онбординг
         checkOnboardingStatus();
         
@@ -344,6 +345,10 @@ export default function AppNavigator() {
         if (Platform.OS === 'web' && window.location.search.includes('token')) {
           window.history.replaceState({}, document.title, window.location.pathname);
         }
+      } else {
+        // При выходе очищаем кеш
+        setProfileCache(null);
+        setHasOnboarded(false);
       }
     });
 
@@ -356,7 +361,7 @@ export default function AppNavigator() {
 
   const checkAuthAndOnboarding = async () => {
     try {
-      console.log('Checking auth and onboarding...');
+      console.log('[Navigator] Checking auth and onboarding...');
       
       // На веб-платформе даем Supabase время обработать токен из URL
       if (Platform.OS === 'web') {
@@ -365,38 +370,59 @@ export default function AppNavigator() {
         const hasToken = urlParams.has('token') || window.location.hash.includes('access_token');
         
         if (hasToken) {
-          console.log('Token detected in URL, waiting for Supabase to process...');
+          console.log('[Navigator] Token detected in URL, waiting for Supabase to process...');
           // Даем Supabase время обработать токен
           await new Promise(resolve => setTimeout(resolve, 1500));
         }
       }
       
       const currentSession = await SupabaseService.getSession();
-      console.log('Current session:', currentSession ? 'exists' : 'none');
+      console.log('[Navigator] Current session:', currentSession ? 'exists' : 'none');
       setSession(currentSession);
       
       if (currentSession) {
-        // Проверяем, есть ли профиль в базе данных
-        const profile = await Storage.getProfile();
-        console.log('Profile exists:', !!profile);
+        // Проверяем профиль с retry (3 попытки)
+        let profile = null;
+        let attempts = 0;
+        const maxAttempts = 3;
         
-        // Если профиля нет - нужен онбординг
+        while (!profile && attempts < maxAttempts) {
+          attempts++;
+          console.log(`[Navigator] Fetching profile (attempt ${attempts}/${maxAttempts})...`);
+          profile = await Storage.getProfile();
+          
+          if (!profile && attempts < maxAttempts) {
+            console.log('[Navigator] Profile not found, retrying...');
+            await new Promise(resolve => setTimeout(resolve, 300));
+          }
+        }
+        
+        console.log('[Navigator] Profile result:', profile ? 'exists' : 'none', profile);
+        
         if (!profile) {
-          console.log('No profile found - need onboarding');
+          console.log('[Navigator] No profile found after retries - need onboarding');
           setHasOnboarded(false);
+          setProfileCache(null);
         } else {
-          // Профиль есть - онбординг пройден
-          console.log('Profile found - onboarding completed');
+          // Профиль есть - кешируем и устанавливаем статус
+          console.log('[Navigator] Profile found - onboarding completed');
+          setProfileCache(profile);
           setHasOnboarded(true);
         }
       } else {
         setHasOnboarded(false);
+        setProfileCache(null);
       }
     } catch (error) {
-      console.error('Error checking auth and onboarding:', error);
-      // При ошибке всё равно показываем UI (экран авторизации)
-      setSession(null);
-      setHasOnboarded(false);
+      console.error('[Navigator] Error checking auth and onboarding:', error);
+      // При ошибке НЕ сбрасываем состояние, если есть кеш
+      if (profileCache) {
+        console.log('[Navigator] Error occurred, but using cached profile');
+        setHasOnboarded(true);
+      } else {
+        setSession(null);
+        setHasOnboarded(false);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -404,30 +430,55 @@ export default function AppNavigator() {
 
   const checkOnboardingStatus = async () => {
     try {
+      console.log('[Navigator] Checking onboarding status...');
+      
+      // Если есть кеш профиля - используем его
+      if (profileCache) {
+        console.log('[Navigator] Using cached profile');
+        setHasOnboarded(true);
+        return;
+      }
+      
       // Проверяем наличие профиля в базе
       const profile = await Storage.getProfile();
-      setHasOnboarded(!!profile);
+      console.log('[Navigator] Onboarding check - profile:', profile ? 'exists' : 'none');
+      
+      if (profile) {
+        setProfileCache(profile);
+        setHasOnboarded(true);
+      } else {
+        setHasOnboarded(false);
+      }
     } catch (error) {
-      console.error('Error checking onboarding status:', error);
-      setHasOnboarded(false);
+      console.error('[Navigator] Error checking onboarding status:', error);
+      // При ошибке НЕ сбрасываем состояние, если есть кеш
+      if (!profileCache) {
+        setHasOnboarded(false);
+      }
     }
   };
 
-  // Listen for profile changes to update navigation
+  // Listen for profile changes to update navigation (только когда профиля создается)
   useEffect(() => {
     if (!session) return; // Только если есть сессия
+    if (hasOnboarded) return; // Если уже прошли онбординг - не проверяем
+    
+    console.log('[Navigator] Starting profile listener (waiting for onboarding completion)');
     
     const interval = setInterval(async () => {
       const profile = await Storage.getProfile();
-      const hasProfile = !!profile;
-      if (hasProfile !== hasOnboarded) {
-        console.log('Profile status changed:', hasProfile);
-        setHasOnboarded(hasProfile);
+      if (profile && !hasOnboarded) {
+        console.log('[Navigator] Profile created - onboarding completed!');
+        setProfileCache(profile);
+        setHasOnboarded(true);
       }
-    }, 2000); // Проверяем реже (каждые 2 секунды)
+    }, 2000); // Проверяем каждые 2 секунды
 
-    return () => clearInterval(interval);
-  }, [hasOnboarded, session]);
+    return () => {
+      console.log('[Navigator] Stopping profile listener');
+      clearInterval(interval);
+    };
+  }, [session]); // Только зависимость от session!
 
   if (isLoading) {
     return (
