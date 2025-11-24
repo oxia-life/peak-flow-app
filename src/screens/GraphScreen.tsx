@@ -962,6 +962,24 @@ export default function GraphScreen() {
         {/* Динамика */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Динамика</Text>
+          <Pressable 
+            style={styles.sectionInfoButton}
+            onPress={() => {
+              if (Platform.OS === 'web') {
+                window.alert('Для анализа показателей пикфлоуметрии определяются цветовые зоны в зависимости от персональной нормы PEF: зеленая (> 80%), желтая (50-80%) и красная (< 50%)');
+              } else {
+                Alert.alert(
+                  'Цветовые зоны',
+                  'Для анализа показателей пикфлоуметрии определяются цветовые зоны в зависимости от персональной нормы PEF: зеленая (> 80%), желтая (50-80%) и красная (< 50%)'
+                );
+              }
+            }}
+          >
+            <Svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <Circle cx="10" cy="10" r="9" stroke="#1E4C60" strokeWidth="1.5" fill="none" />
+              <Path d="M10 14V10M10 6H10.01" stroke="#1E4C60" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
+          </Pressable>
         </View>
 
         {/* Блок с графиком */}
