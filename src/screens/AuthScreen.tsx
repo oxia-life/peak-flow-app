@@ -10,6 +10,8 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [otpCode, setOtpCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -77,11 +79,11 @@ export default function AuthScreen() {
       const { error } = await SupabaseService.sendMagicLink(email.trim().toLowerCase());
 
       if (error) {
-        console.error('Error sending magic link:', error);
+        console.error('Error sending OTP:', error);
         if (Platform.OS === 'web') {
-          window.alert('Ошибка при отправке письма. Попробуйте еще раз.');
+          window.alert('Ошибка при отправке кода. Попробуйте еще раз.');
         } else {
-          Alert.alert('Ошибка', 'Не удалось отправить письмо. Попробуйте еще раз.');
+          Alert.alert('Ошибка', 'Не удалось отправить код. Попробуйте еще раз.');
         }
       } else {
         setEmailSent(true);
@@ -89,12 +91,12 @@ export default function AuthScreen() {
         
         if (Platform.OS === 'web') {
           window.alert(
-            `✉️ Письмо отправлено!\n\nМы отправили ссылку для входа на ${email}.\n\nПроверьте почту и перейдите по ссылке для авторизации.`
+            `✉️ Код отправлен!\n\nМы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         } else {
           Alert.alert(
-            'Письмо отправлено',
-            `Мы отправили ссылку для входа на ${email}.\n\nПроверьте почту и перейдите по ссылке для авторизации.`
+            'Код отправлен',
+            `Мы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         }
       }
@@ -110,6 +112,54 @@ export default function AuthScreen() {
     }
   };
 
+  const handleVerifyOTP = async () => {
+    if (!otpCode.trim()) {
+      if (Platform.OS === 'web') {
+        window.alert('Введите код из письма');
+      } else {
+        Alert.alert('Ошибка', 'Введите код из письма');
+      }
+      return;
+    }
+
+    if (otpCode.length !== 6) {
+      if (Platform.OS === 'web') {
+        window.alert('Код должен содержать 6 цифр');
+      } else {
+        Alert.alert('Ошибка', 'Код должен содержать 6 цифр');
+      }
+      return;
+    }
+
+    setVerifying(true);
+
+    try {
+      const { error } = await SupabaseService.verifyOTP(email.trim().toLowerCase(), otpCode.trim());
+
+      if (error) {
+        console.error('Error verifying OTP:', error);
+        if (Platform.OS === 'web') {
+          window.alert('Неверный код или срок действия истек. Попробуйте еще раз.');
+        } else {
+          Alert.alert('Ошибка', 'Неверный код или срок действия истек. Попробуйте еще раз.');
+        }
+        setOtpCode(''); // Очищаем поле при ошибке
+      } else {
+        // Успех! Навигация произойдет автоматически через onAuthStateChange
+        console.log('OTP verified successfully');
+      }
+    } catch (error) {
+      console.error('Unexpected error during verification:', error);
+      if (Platform.OS === 'web') {
+        window.alert('Произошла ошибка при проверке кода.');
+      } else {
+        Alert.alert('Ошибка', 'Произошла ошибка при проверке кода.');
+      }
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   return (
     <ScreenContainer>
       <KeyboardAvoidingView 
@@ -121,49 +171,92 @@ export default function AuthScreen() {
           <View style={styles.header}>
             <Text style={styles.title}>Вход в аккаунт</Text>
             <Text style={styles.subtitle}>
-              Введите вашу электронную почту, и мы отправим вам ссылку для входа
+              {emailSent 
+                ? 'Введите 6-значный код из письма' 
+                : 'Введите вашу электронную почту, и мы отправим вам код для входа'}
             </Text>
           </View>
 
           {/* Поле ввода email */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Электронная почта</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="example@mail.com"
-              placeholderTextColor="#999"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              editable={!loading}
+          {!emailSent && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Электронная почта</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="example@mail.com"
+                placeholderTextColor="#999"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                editable={!loading}
+              />
+            </View>
+          )}
+
+          {/* Поле ввода OTP кода */}
+          {emailSent && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Код из письма</Text>
+              <TextInput
+                style={[styles.input, styles.otpInput]}
+                placeholder="000000"
+                placeholderTextColor="#999"
+                value={otpCode}
+                onChangeText={(text) => setOtpCode(text.replace(/[^0-9]/g, ''))}
+                keyboardType="number-pad"
+                maxLength={6}
+                autoFocus
+                editable={!verifying}
+              />
+              <Text style={styles.emailDisplay}>Письмо отправлено на: {email}</Text>
+            </View>
+          )}
+
+          {/* Кнопка отправки/проверки */}
+          {!emailSent ? (
+            <PrimaryButton
+              title={loading ? 'Отправка...' : 'Получить код для входа'}
+              onPress={handleSendMagicLink}
+              disabled={loading}
             />
-          </View>
-
-          {/* Кнопка отправки */}
-          <PrimaryButton
-            title={loading ? 'Отправка...' : emailSent ? 'Отправить повторно' : 'Получить ссылку для входа'}
-            onPress={handleSendMagicLink}
-            disabled={loading || countdown > 0}
-          />
-
-          {/* Таймер повторной отправки */}
-          {countdown > 0 && (
-            <Text style={styles.countdown}>
-              Повторная отправка доступна через {countdown} сек
-            </Text>
+          ) : (
+            <>
+              <PrimaryButton
+                title={verifying ? 'Проверка...' : 'Войти'}
+                onPress={handleVerifyOTP}
+                disabled={verifying || otpCode.length !== 6}
+              />
+              
+              {countdown > 0 ? (
+                <Text style={styles.countdown}>
+                  Повторная отправка доступна через {countdown} сек
+                </Text>
+              ) : (
+                <PrimaryButton
+                  title="Отправить код повторно"
+                  onPress={() => {
+                    setOtpCode('');
+                    setEmailSent(false);
+                  }}
+                  variant="secondary"
+                  style={{ marginTop: 12 }}
+                />
+              )}
+            </>
           )}
 
           {/* Инструкция после отправки */}
-          {emailSent && countdown === 0 && (
+          {emailSent && (
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>📧 Не получили письмо?</Text>
+              <Text style={styles.infoTitle}>📧 Не получили код?</Text>
               <Text style={styles.infoText}>
                 • Проверьте папку "Спам" или "Промоакции"{'\n'}
                 • Убедитесь, что адрес указан правильно{'\n'}
-                • Нажмите "Отправить повторно"
+                • Код действителен 10 минут{'\n'}
+                • Нажмите "Отправить код повторно"
               </Text>
             </View>
           )}
@@ -224,6 +317,21 @@ const styles = StyleSheet.create({
     fontWeight: FONT_WEIGHTS.regular,
     backgroundColor: '#fff',
     color: '#333',
+  },
+  otpInput: {
+    fontFamily: FONTS.semibold,
+    fontSize: 24,
+    fontWeight: FONT_WEIGHTS.semibold,
+    letterSpacing: 8,
+    textAlign: 'center',
+  },
+  emailDisplay: {
+    fontFamily: FONTS.regular,
+    fontSize: 13,
+    fontWeight: FONT_WEIGHTS.regular,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 8,
   },
   countdown: {
     fontFamily: FONTS.regular,

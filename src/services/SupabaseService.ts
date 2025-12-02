@@ -6,20 +6,53 @@ class SupabaseService {
   // ==================== АВТОРИЗАЦИЯ ====================
   
   /**
-   * Отправить magic link на email
+   * Отправить OTP код на email
+   * (Ранее использовался для magic link, теперь для OTP)
    */
-  async sendMagicLink(email: string): Promise<{ error: Error | null }> {
+  async sendOTP(email: string): Promise<{ error: Error | null }> {
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: 'https://peakflow.oxia.life',
+          shouldCreateUser: true, // Автоматически создает пользователя, если его нет
         },
       });
       return { error };
     } catch (error) {
       return { error: error as Error };
     }
+  }
+
+  /**
+   * Проверить OTP код
+   */
+  async verifyOTP(email: string, token: string): Promise<{ error: Error | null }> {
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'email',
+      });
+      
+      if (error) {
+        console.error('verifyOTP: Error:', error);
+        return { error };
+      }
+      
+      console.log('verifyOTP: Success, user:', data.user?.id);
+      return { error: null };
+    } catch (error) {
+      console.error('verifyOTP: Exception:', error);
+      return { error: error as Error };
+    }
+  }
+
+  /**
+   * @deprecated Используйте sendOTP() вместо sendMagicLink()
+   * Оставлено для обратной совместимости
+   */
+  async sendMagicLink(email: string): Promise<{ error: Error | null }> {
+    return this.sendOTP(email);
   }
 
   /**
