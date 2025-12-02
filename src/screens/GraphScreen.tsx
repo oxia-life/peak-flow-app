@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, ActivityIndicator, Dimensions, Platform, Alert } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import Svg, { Line, Circle, Rect, Text as SvgText, Polyline, Defs, LinearGradient, Stop, Path } from 'react-native-svg';
+import Svg, { Line, Circle, Rect, Text as SvgText, Polyline, Defs, LinearGradient as SvgLinearGradient, Stop, Path } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
 import ScreenContainer from '../components/ScreenContainer';
 import PrimaryButton from '../components/PrimaryButton';
 import Storage from '../services/Storage';
@@ -420,22 +421,22 @@ export default function GraphScreen() {
               {/* Определяем градиенты */}
               <Defs>
                 {/* Красный градиент */}
-                <LinearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
+                <SvgLinearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
                   <Stop offset="0%" stopColor="#D2395A" stopOpacity="1" />
                   <Stop offset="100%" stopColor="#FF5353" stopOpacity="1" />
-                </LinearGradient>
+                </SvgLinearGradient>
                 
                 {/* Желтый градиент */}
-                <LinearGradient id="yellowGradient" x1="0" y1="0" x2="0" y2="1">
+                <SvgLinearGradient id="yellowGradient" x1="0" y1="0" x2="0" y2="1">
                   <Stop offset="0%" stopColor="#FFC037" stopOpacity="1" />
                   <Stop offset="100%" stopColor="#F7F29C" stopOpacity="1" />
-                </LinearGradient>
+                </SvgLinearGradient>
                 
                 {/* Зеленый градиент */}
-                <LinearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
+                <SvgLinearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
                   <Stop offset="0%" stopColor="#67DB71" stopOpacity="1" />
                   <Stop offset="100%" stopColor="#CFF6B0" stopOpacity="1" />
-                </LinearGradient>
+                </SvgLinearGradient>
               </Defs>
 
               {/* Горизонтальные линии сетки */}
