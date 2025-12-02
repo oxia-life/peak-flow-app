@@ -523,18 +523,33 @@ export default function GraphScreen() {
               })}
             </Svg>
           
-          {/* Легенда */}
+          {/* Легенда для столбчатого графика */}
           <View style={styles.legendContainer}>
             <View style={styles.legendRow}>
-              <View style={[styles.legendBox, { backgroundColor: '#4CAF50', opacity: 0.3 }]} />
+              <LinearGradient
+                colors={['#82E5BA', '#47CC73']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.legendBox}
+              />
               <Text style={styles.legendText}>Зелёная зона (≥80%)</Text>
             </View>
             <View style={styles.legendRow}>
-              <View style={[styles.legendBox, { backgroundColor: '#FFEB3B', opacity: 0.3 }]} />
+              <LinearGradient
+                colors={['#F7F29C', '#FFC037']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.legendBox}
+              />
               <Text style={styles.legendText}>Жёлтая зона (50-80%)</Text>
             </View>
             <View style={styles.legendRow}>
-              <View style={[styles.legendBox, { backgroundColor: '#F44336', opacity: 0.3 }]} />
+              <LinearGradient
+                colors={['#FF5353', '#CD4585']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.legendBox}
+              />
               <Text style={styles.legendText}>{'Красная зона (<50%)'}</Text>
             </View>
           </View>
@@ -1278,6 +1293,7 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 4,
     marginRight: 12,
+    overflow: 'hidden',
   },
   legendText: {
     fontFamily: FONTS.regular,
