@@ -145,6 +145,14 @@ export default function GraphScreen() {
     }
   };
 
+  // Функция для форматирования локальной даты в YYYY-MM-DD без проблем с часовым поясом
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const canGoNext = (): boolean => {
     return periodOffset < 0;
   };
@@ -163,8 +171,8 @@ export default function GraphScreen() {
     const { start, end } = getPeriodDates();
     
     // Преобразуем даты диапазона в строки формата YYYY-MM-DD для корректного сравнения
-    const startStr = start.toISOString().split('T')[0];
-    const endStr = end.toISOString().split('T')[0];
+    const startStr = formatLocalDate(start);
+    const endStr = formatLocalDate(end);
     
     return records
       .filter((record) => {
@@ -179,7 +187,7 @@ export default function GraphScreen() {
   };
 
   const getTodayMeasurements = () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = formatLocalDate(new Date());
     const todayRecords = records.filter(r => r.date === today);
     
     if (todayRecords.length === 0) {
@@ -298,7 +306,7 @@ export default function GraphScreen() {
           const month = start.getMonth();
           const day = start.getDate() + i;
           const date = new Date(year, month, day);
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(date);
           const dayNum = date.getDate();
           const dayName = dayNames[date.getDay()];
           const label = `${dayNum} ${dayName}`;
@@ -311,7 +319,7 @@ export default function GraphScreen() {
           const month = start.getMonth();
           const day = start.getDate() + i;
           const date = new Date(year, month, day);
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(date);
           const label = `${date.getDate()}`;
           timeScale.push({ date: dateStr, label });
         }
@@ -514,6 +522,22 @@ export default function GraphScreen() {
                 );
               })}
             </Svg>
+          
+          {/* Легенда */}
+          <View style={styles.legendContainer}>
+            <View style={styles.legendRow}>
+              <View style={[styles.legendBox, { backgroundColor: '#4CAF50', opacity: 0.3 }]} />
+              <Text style={styles.legendText}>Зелёная зона (≥80%)</Text>
+            </View>
+            <View style={styles.legendRow}>
+              <View style={[styles.legendBox, { backgroundColor: '#FFEB3B', opacity: 0.3 }]} />
+              <Text style={styles.legendText}>Жёлтая зона (50-80%)</Text>
+            </View>
+            <View style={styles.legendRow}>
+              <View style={[styles.legendBox, { backgroundColor: '#F44336', opacity: 0.3 }]} />
+              <Text style={styles.legendText}>{'Красная зона (<50%)'}</Text>
+            </View>
+          </View>
         </View>
       );
     } catch (error) {
@@ -553,7 +577,7 @@ export default function GraphScreen() {
           const month = start.getMonth();
           const day = start.getDate() + i;
           const date = new Date(year, month, day);
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(date);
           const dayNum = date.getDate();
           const dayName = dayNames[date.getDay()];
           const label = `${dayNum} ${dayName}`;
@@ -567,7 +591,7 @@ export default function GraphScreen() {
           const month = start.getMonth();
           const day = start.getDate() + i;
           const date = new Date(year, month, day);
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(date);
           const label = `${date.getDate()}`;
           timeScale.push({ date: dateStr, label });
         }

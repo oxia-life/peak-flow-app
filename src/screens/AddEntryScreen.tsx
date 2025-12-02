@@ -16,10 +16,18 @@ interface AddEntryScreenProps {
   navigation: AddEntryScreenNavigationProp;
 }
 
+// Функция для форматирования локальной даты в YYYY-MM-DD без проблем с часовым поясом
+const formatLocalDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function AddEntryScreen({ navigation }: AddEntryScreenProps) {
   // Текущая дата и время по умолчанию
   const now = new Date();
-  const defaultDate = now.toISOString().split('T')[0];
+  const defaultDate = formatLocalDate(now);
   const defaultTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
   const [date, setDate] = useState(defaultDate);

@@ -9,6 +9,14 @@ interface DatePickerProps {
   error?: string;
 }
 
+// Функция для форматирования локальной даты в YYYY-MM-DD без проблем с часовым поясом
+const formatLocalDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function DatePicker({ value, onChange, error }: DatePickerProps) {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(() => {
@@ -22,7 +30,7 @@ export default function DatePicker({ value, onChange, error }: DatePickerProps) 
     
     if (selectedDate) {
       setDate(selectedDate);
-      const isoDate = selectedDate.toISOString().split('T')[0];
+      const isoDate = formatLocalDate(selectedDate);
       onChange(isoDate);
     }
   };
