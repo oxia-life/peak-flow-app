@@ -3,21 +3,20 @@
 dist/
 web-build/
 
-# Dependencies
+# Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Build outputs
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-
-# Environment
+# Environment variables
 .env
 .env.local
-.env.production
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
 
 # IDE
 .vscode/
@@ -26,14 +25,24 @@ node_modules/
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
+# EAS
+.eas/
 
-# Debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Google Play Service Account (КРИТИЧНО!)
+google-play-service-account.json
+
+# iOS
+ios/
+*.ipa
+*.app.dSYM.zip
+*.mobileprovision
+
+# Android
+android/
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Logs
 *.log
-.env
-web-build/

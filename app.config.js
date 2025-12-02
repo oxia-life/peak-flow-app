@@ -1,0 +1,61 @@
+export default {
+  expo: {
+    name: "Дневник пикфлоуметрии",
+    slug: "peak-flow-diary",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    userInterfaceStyle: "light",
+    
+    splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff"
+    },
+    
+    updates: {
+      fallbackToCacheTimeout: 0
+    },
+    
+    assetBundlePatterns: [
+      "**/*"
+    ],
+    
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: "com.oxia.peakflowdiary",
+      buildNumber: "1",
+      infoPlist: {
+        NSHealthShareUsageDescription: "Приложение использует данные о здоровье для отслеживания показателей дыхания.",
+        NSHealthUpdateUsageDescription: "Приложение сохраняет данные о показателях дыхания в Health приложении.",
+      },
+      config: {
+        usesNonExemptEncryption: false
+      }
+    },
+    
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#1E4C60"
+      },
+      package: "com.oxia.peakflowdiary",
+      versionCode: 1,
+      permissions: []
+    },
+    
+    web: {
+      favicon: "./assets/favicon.png",
+      bundler: "metro"
+    },
+    
+    plugins: [],
+    
+    extra: {
+      eas: {
+        projectId: "ЗАПОЛНИТСЯ_ПОСЛЕ_eas_build_configure"
+      }
+    }
+  }
+};
+

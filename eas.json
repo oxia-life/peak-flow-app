@@ -1,0 +1,58 @@
+{
+  "cli": {
+    "version": ">= 5.9.0"
+  },
+  "build": {
+    "production": {
+      "releaseChannel": "production",
+      "distribution": "store",
+      "env": {
+        "APP_VARIANT": "production"
+      },
+      "ios": {
+        "resourceClass": "m-medium",
+        "simulator": false,
+        "buildConfiguration": "Release"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:bundleRelease"
+      }
+    },
+    "preview": {
+      "releaseChannel": "preview",
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "preview"
+      },
+      "ios": {
+        "simulator": false,
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "development"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "ЗАПОЛНИТЕ_ВАШ_APPLE_ID@mail.com",
+        "ascAppId": "ЗАПОЛНИТСЯ_ПОСЛЕ_СОЗДАНИЯ_APP",
+        "appleTeamId": "ЗАПОЛНИТСЯ_АВТОМАТИЧЕСКИ"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "production"
+      }
+    }
+  }
+}
+
