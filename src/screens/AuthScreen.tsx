@@ -91,12 +91,12 @@ export default function AuthScreen() {
         
         if (Platform.OS === 'web') {
           window.alert(
-            `✉️ Код отправлен!\n\nМы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
+            `✉️ Код отправлен!\n\nМы отправили 8-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         } else {
           Alert.alert(
             'Код отправлен',
-            `Мы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
+            `Мы отправили 8-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         }
       }
@@ -122,11 +122,11 @@ export default function AuthScreen() {
       return;
     }
 
-    if (otpCode.length !== 6) {
+    if (otpCode.length !== 8) {
       if (Platform.OS === 'web') {
-        window.alert('Код должен содержать 6 цифр');
+        window.alert('Код должен содержать 8 цифр');
       } else {
-        Alert.alert('Ошибка', 'Код должен содержать 6 цифр');
+        Alert.alert('Ошибка', 'Код должен содержать 8 цифр');
       }
       return;
     }
@@ -202,12 +202,12 @@ export default function AuthScreen() {
               <Text style={styles.label}>Код из письма</Text>
               <TextInput
                 style={[styles.input, styles.otpInput]}
-                placeholder="000000"
+                placeholder="00000000"
                 placeholderTextColor="#999"
                 value={otpCode}
                 onChangeText={(text) => setOtpCode(text.replace(/[^0-9]/g, ''))}
                 keyboardType="number-pad"
-                maxLength={6}
+                maxLength={8}
                 autoFocus
                 editable={!verifying}
               />
@@ -227,7 +227,7 @@ export default function AuthScreen() {
               <PrimaryButton
                 title={verifying ? 'Проверка...' : 'Войти'}
                 onPress={handleVerifyOTP}
-                disabled={verifying || otpCode.length !== 6}
+                disabled={verifying || otpCode.length !== 8}
               />
               
               {countdown > 0 ? (
