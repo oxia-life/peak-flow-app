@@ -26,3 +26,4 @@ fi
 echo "✅ Выполняется push..."
 git push origin "$CURRENT_BRANCH"
 
+

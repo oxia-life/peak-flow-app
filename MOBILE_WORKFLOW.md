@@ -31,3 +31,4 @@
 - eas build → сборка мобильных приложений
 - git push origin main → деплой веба
 
+

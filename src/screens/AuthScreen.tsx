@@ -122,7 +122,7 @@ export default function AuthScreen() {
       return;
     }
 
-    if (otpCode.length !== 8) {
+    if (otpCode.length !== 6) {
       if (Platform.OS === 'web') {
         window.alert('Код должен содержать 8 цифр');
       } else {
@@ -207,7 +207,7 @@ export default function AuthScreen() {
                 value={otpCode}
                 onChangeText={(text) => setOtpCode(text.replace(/[^0-9]/g, ''))}
                 keyboardType="number-pad"
-                maxLength={8}
+                maxLength={6}
                 autoFocus
                 editable={!verifying}
               />
@@ -227,7 +227,7 @@ export default function AuthScreen() {
               <PrimaryButton
                 title={verifying ? 'Проверка...' : 'Войти'}
                 onPress={handleVerifyOTP}
-                disabled={verifying || otpCode.length !== 8}
+                disabled={verifying || otpCode.length !== 6}
               />
               
               {countdown > 0 ? (

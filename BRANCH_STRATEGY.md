@@ -410,3 +410,4 @@ React Native автоматически выберет нужный!
 <function_calls>
 <invoke name="read_file">
 <parameter name="target_file">/Users/monastyrskaya/Documents/peak-flow-diary/package.json
+

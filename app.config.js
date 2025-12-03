@@ -53,9 +53,10 @@ export default {
     
     extra: {
       eas: {
-        projectId: "ЗАПОЛНИТСЯ_ПОСЛЕ_eas_build_configure"
+        projectId: "ca48f9ec-0c57-4293-a7ed-ba85666de272"
       }
     }
   }
 };
+
 

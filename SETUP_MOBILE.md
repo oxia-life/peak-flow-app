@@ -674,3 +674,4 @@ eas build:configure --platform ios
 
 Удачи с запуском! 🚀
 
+

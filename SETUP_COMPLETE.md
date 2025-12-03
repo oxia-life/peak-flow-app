@@ -498,3 +498,4 @@ open QUICK_START_CHECKLIST.md
 
 *Все готово. Осталось только начать.* ✨
 
+
