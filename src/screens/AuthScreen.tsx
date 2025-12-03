@@ -91,12 +91,12 @@ export default function AuthScreen() {
         
         if (Platform.OS === 'web') {
           window.alert(
-            `✉️ Код отправлен!\n\nМы отправили 8-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
+            `✉️ Код отправлен!\n\nМы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         } else {
           Alert.alert(
             'Код отправлен',
-            `Мы отправили 8-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
+            `Мы отправили 6-значный код на ${email}.\n\nПроверьте почту и введите код ниже.`
           );
         }
       }
@@ -202,7 +202,7 @@ export default function AuthScreen() {
               <Text style={styles.label}>Код из письма</Text>
               <TextInput
                 style={[styles.input, styles.otpInput]}
-                placeholder="00000000"
+                placeholder="000000"
                 placeholderTextColor="#999"
                 value={otpCode}
                 onChangeText={(text) => setOtpCode(text.replace(/[^0-9]/g, ''))}
