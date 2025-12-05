@@ -1,36 +1,31 @@
 {
   "cli": {
-    "version": ">= 5.9.0"
+    "version": ">= 5.9.0",
+    "appVersionSource": "local"
   },
   "build": {
     "production": {
-      "releaseChannel": "production",
       "distribution": "store",
       "env": {
         "APP_VARIANT": "production"
       },
-      "ios": {
-        "resourceClass": "m-medium",
-        "simulator": false,
-        "buildConfiguration": "Release"
-      },
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:bundleRelease"
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "resourceClass": "m-medium"
       }
     },
     "preview": {
-      "releaseChannel": "preview",
       "distribution": "internal",
       "env": {
         "APP_VARIANT": "preview"
       },
-      "ios": {
-        "simulator": false,
-        "resourceClass": "m-medium"
-      },
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "resourceClass": "m-medium"
       }
     },
     "development": {
@@ -50,10 +45,8 @@
       },
       "android": {
         "serviceAccountKeyPath": "./google-play-service-account.json",
-        "track": "production"
+        "track": "internal"
       }
     }
   }
 }
-
-
