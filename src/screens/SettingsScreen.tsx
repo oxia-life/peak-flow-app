@@ -625,6 +625,9 @@ export default function SettingsScreen() {
           <Text style={styles.sectionText}>
             Приложение для отслеживания показателей пиковой скорости выдоха (ПСВ)
           </Text>
+          <Text style={styles.disclaimerText}>
+            Есть противопоказания. Посоветуйтесь с врачом.
+          </Text>
           <View style={styles.linksContainer}>
             <Pressable onPress={() => Linking.openURL('https://oxia.life/page97307316.html')}>
               <Text style={styles.linkText}>Политика конфиденциальности</Text>
@@ -852,6 +855,16 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 22,
     marginBottom: 8,
+  },
+  disclaimerText: {
+    fontFamily: FONTS.regular,
+    fontSize: 13,
+    fontWeight: FONT_WEIGHTS.regular,
+    color: '#999',
+    lineHeight: 18,
+    marginTop: 8,
+    marginBottom: 8,
+    fontStyle: 'italic',
   },
   linksContainer: {
     marginTop: 12,
