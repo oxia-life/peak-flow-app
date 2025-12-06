@@ -39,7 +39,9 @@ export default {
       },
       package: "com.oxia.peakflowdiary",
       versionCode: 1,
-      permissions: []
+      permissions: [],
+      // Target API 35 для Google Play (требование с 2024)
+      targetSdkVersion: 35
     },
     
     web: {
