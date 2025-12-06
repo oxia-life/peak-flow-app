@@ -639,7 +639,7 @@ export default function SettingsScreen() {
           
           <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Данные</Text>
           <Text style={styles.sectionText}>
-            Все ваши данные надежно защищены и синхронизируются с облаком.
+            Ваши данные синхронизируются с облаком.
           </Text>
         </View>
 

@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Storage from './services/Storage';
 import SupabaseService from './services/SupabaseService';
 import { Session } from '@supabase/supabase-js';
+import SplashScreen from './components/SplashScreen';
 
 // Auth screen
 import AuthScreen from './screens/AuthScreen';
@@ -481,6 +482,12 @@ export default function AppNavigator() {
   }, [session]); // Только зависимость от session!
 
   if (isLoading) {
+    // Для мобильных приложений показываем SplashScreen с градиентом и иконкой
+    // Для веба - простой индикатор загрузки
+    if (Platform.OS !== 'web') {
+      return <SplashScreen />;
+    }
+    
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5F5F5' }}>
         <ActivityIndicator size="large" color="#1E4C60" />
