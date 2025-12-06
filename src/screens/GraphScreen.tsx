@@ -1162,22 +1162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rangeButtonActive: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    ...(Platform.OS === 'web' && {
-      // @ts-ignore - Web-specific property
-      boxShadow: '0px 2px 3px 0px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 0px rgba(0, 0, 0, 0.05) inset',
-    }),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    backgroundColor: '#E8E8E8',
   },
   rangeButtonText: {
     fontFamily: FONTS.regular,

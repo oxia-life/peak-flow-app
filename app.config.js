@@ -8,8 +8,6 @@ export default {
     userInterfaceStyle: "light",
     
     splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
       backgroundColor: "#2D6A93"
     },
     

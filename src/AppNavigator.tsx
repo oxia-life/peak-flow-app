@@ -25,7 +25,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import AddEntryScreen from './screens/AddEntryScreen';
 
 export type AuthStackParamList = {
-  Auth: undefined;
+  AuthScreen: undefined;
 };
 
 export type OnboardingStackParamList = {
@@ -65,7 +65,7 @@ function AuthNavigator() {
         headerShown: false,
       }}
     >
-      <AuthStack.Screen name="Auth" component={AuthScreen} />
+      <AuthStack.Screen name="AuthScreen" component={AuthScreen} />
     </AuthStack.Navigator>
   );
 }

@@ -280,6 +280,7 @@ export default function HistoryScreen() {
         title="История" 
         showCloseButton={true}
         onClose={handleClose}
+        scrollable={false}
       >
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
@@ -294,6 +295,7 @@ export default function HistoryScreen() {
       title="История"
       showCloseButton={true}
       onClose={handleClose}
+      scrollable={false}
     >
       <FlatList
         data={records}

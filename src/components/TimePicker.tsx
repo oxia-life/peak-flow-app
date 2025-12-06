@@ -37,7 +37,8 @@ export default function TimePicker({ value, onChange, error }: TimePickerProps) 
 
   const formatTime = (timeStr: string): string => {
     if (!timeStr) return 'Выберите время';
-    return timeStr;
+    // Убираем секунды, оставляем только HH:MM
+    return timeStr.substring(0, 5);
   };
 
   const handleDismiss = () => {
@@ -82,7 +83,7 @@ export default function TimePicker({ value, onChange, error }: TimePickerProps) 
         onPress={() => setShow(true)}
       >
         <Text style={[styles.buttonText, !value && styles.placeholder]}>
-          {value ? formatTime(value) : 'Выберите время'}
+          {formatTime(value)}
         </Text>
         <Text style={styles.icon}>🕐</Text>
       </Pressable>
