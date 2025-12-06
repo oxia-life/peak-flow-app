@@ -1,0 +1,86 @@
+═══════════════════════════════════════════════════════════════
+БЫСТРАЯ СПРАВКА: Заполнение формы "Добавить инструкции"
+═══════════════════════════════════════════════════════════════
+
+ШАГ 1: Создайте тестовый email (если еще не создан)
+──────────────────────────────────────────────────────────────
+1. Откройте Gmail.com
+2. Создайте новый аккаунт (например: peakflow.test.review@gmail.com)
+3. Запишите пароль от этого аккаунта
+4. Убедитесь, что можете входить в этот аккаунт
+
+ШАГ 2: Заполните форму в Google Play Console
+──────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────┐
+│ НАЗВАНИЕ ИНСТРУКЦИИ (Instruction name)                      │
+│ Максимум 60 символов                                        │
+└─────────────────────────────────────────────────────────────┘
+
+  Instructions for accessing Peak Flow Diary app
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ ИМЯ ПОЛЬЗОВАТЕЛЯ, ЭЛЕКТРОННЫЙ АДРЕС ИЛИ НОМЕР ТЕЛЕФОНА      │
+│ Максимум 100 символов                                       │
+└─────────────────────────────────────────────────────────────┘
+
+  [ВСТАВЬТЕ ВАШ ТЕСТОВЫЙ EMAIL ЗДЕСЬ]
+  Например: peakflow.test.review@gmail.com
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ ПАРОЛЬ (Password)                                           │
+│ Максимум 100 символов                                       │
+└─────────────────────────────────────────────────────────────┘
+
+  N/A - App uses OTP authentication via email
+
+
+ШАГ 3: Краткие инструкции (если есть дополнительное поле)
+──────────────────────────────────────────────────────────────
+
+1. Enter the provided email address in the app
+2. Tap "Получить код для входа" (Get login code)
+3. Check the email inbox for a 6-digit OTP code
+4. Enter the code in the app to log in
+5. Complete the onboarding process (Welcome → Consent → Profile Setup)
+6. Access all app features after onboarding
+
+Note: OTP codes expire in 10 minutes. Use "Resend code" if needed.
+
+
+═══════════════════════════════════════════════════════════════
+ПОЛНАЯ ИНСТРУКЦИЯ (для дополнительного поля или документации)
+═══════════════════════════════════════════════════════════════
+
+Instructions for accessing Peak Flow Diary app:
+
+OVERVIEW:
+Peak Flow Diary uses email-based OTP (one-time password) authentication.
+
+LOGIN STEPS:
+1. Open the app
+2. Enter email: [ВАШ ТЕСТОВЫЙ EMAIL]
+3. Tap "Получить код для входа" (Get login code)
+4. Check email inbox for 6-digit OTP code (check spam folder if not received)
+5. Enter the OTP code in the app
+6. Tap "Войти" (Login)
+
+ONBOARDING (first time only):
+- Tap "Далее" (Next) on welcome screen
+- Check "Я соглашаюсь" (I agree) on consent screen
+- Complete profile: select gender, enter birth year, enter height, choose norm method
+- Tap "Сохранить и начать" (Save and start)
+
+IMPORTANT NOTES:
+- OTP codes are valid for 10 minutes
+- Use "Отправить код повторно" (Resend code) if code expires
+- Email access is required to receive OTP codes
+- No password is used - authentication is OTP-only
+
+TEST ACCOUNT:
+Email: [ВАШ ТЕСТОВЫЙ EMAIL]
+Authentication: OTP via email (6 digits, 10 min validity)
+
+═══════════════════════════════════════════════════════════════

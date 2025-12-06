@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запрос на удаление аккаунта - Дневник пикфлоуметрии</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1E4C60;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #1E4C60;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 22px;
+            border-bottom: 2px solid #3E9DC6;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .app-name {
+            color: #3E9DC6;
+            font-weight: 600;
+        }
+
+        .developer {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .info-box {
+            background-color: #E8F4F8;
+            border-left: 4px solid #3E9DC6;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background-color: #FFF3CD;
+            border-left: 4px solid #FFC107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+
+        .steps li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #1E4C60;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .data-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .data-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .data-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #3E9DC6;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3E9DC6;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1E4C60 0%, #3E9DC6 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            background-color: #D4EDDA;
+            border-left: 4px solid #28A745;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .contact-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Запрос на удаление аккаунта</h1>
+        <p class="developer">Приложение: <span class="app-name">Дневник пикфлоуметрии PeakFlow</span><br>
+        Разработчик: <span class="app-name">Oxia</span></p>
+
+        <div class="info-box">
+            <strong>Важно:</strong> Если вы хотите удалить свой аккаунт и все связанные с ним данные, следуйте инструкции ниже. 
+            После подтверждения удаления все ваши данные будут безвозвратно удалены в течение 30 дней.
+        </div>
+
+        <h2>📋 Что будет удалено</h2>
+        <p>После обработки вашего запроса будут безвозвратно удалены следующие данные:</p>
+        
+        <ul class="data-list">
+            <li><strong>Email адрес</strong> — идентификатор для входа в приложение</li>
+            <li><strong>Профиль пользователя:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Пол</li>
+                    <li>Дата рождения</li>
+                    <li>Рост</li>
+                    <li>Метод расчета нормы ПСВ</li>
+                    <li>Значение нормы (если задано вручную)</li>
+                </ul>
+            </li>
+            <li><strong>Все записи измерений ПСВ:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Дата и время измерения</li>
+                    <li>Значение ПСВ (л/мин)</li>
+                    <li>Симптомы (кашель, одышка, мокрота)</li>
+                </ul>
+            </li>
+            <li><strong>Настройки приложения</strong> (тип графика, другие пользовательские настройки)</li>
+            <li><strong>Аккаунт пользователя</strong> — доступ к приложению будет прекращен</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Внимание:</strong> Удаление аккаунта является необратимым действием. После удаления восстановить данные будет невозможно.
+        </div>
+
+        <h2>⏱️ Сроки обработки и удаления данных</h2>
+        <ul class="data-list" style="counter-reset: none;">
+            <li><strong>Подтверждение запроса:</strong> в течение 3 рабочих дней</li>
+            <li><strong>Полное удаление данных:</strong> в течение 30 дней после подтверждения</li>
+            <li>Вы получите уведомление на указанный email после завершения процесса удаления</li>
+        </ul>
+
+        <h2>📝 Инструкция по запросу удаления аккаунта</h2>
+        
+        <ol class="steps">
+            <li>
+                <strong>Заполните форму ниже</strong><br>
+                Укажите email адрес, который использовался для регистрации в приложении "Дневник пикфлоуметрии PeakFlow".
+            </li>
+            <li>
+                <strong>Подтвердите запрос</strong><br>
+                Проверьте правильность указанного email адреса перед отправкой запроса.
+            </li>
+            <li>
+                <strong>Ожидайте подтверждения</strong><br>
+                В течение 3 рабочих дней мы отправим вам письмо с подтверждением запроса на указанный email.
+            </li>
+            <li>
+                <strong>Подтвердите удаление</strong><br>
+                Перейдите по ссылке в письме, чтобы окончательно подтвердить удаление аккаунта.
+            </li>
+            <li>
+                <strong>Ожидайте завершения процесса</strong><br>
+                Все данные будут удалены в течение 30 дней после подтверждения. Вы получите уведомление о завершении процесса.
+            </li>
+        </ol>
+
+        <h2>✉️ Форма запроса на удаление аккаунта</h2>
+
+        <form id="deletionForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="email">Email адрес *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required
+                    placeholder="example@mail.com"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                >
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Укажите email, который использовался при регистрации в приложении
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Дополнительная информация (необязательно)</label>
+                <textarea 
+                    id="message" 
+                    name="message"
+                    placeholder="Если вы хотите указать причину удаления или другую информацию, оставьте комментарий здесь"
+                ></textarea>
+            </div>
+
+            <div class="warning-box">
+                <strong>Перед отправкой убедитесь, что:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Email адрес указан правильно</li>
+                    <li>Вы понимаете, что все данные будут удалены безвозвратно</li>
+                    <li>Вы сохранили все важные данные, если они вам нужны</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Отправить запрос на удаление аккаунта
+            </button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            <strong>✅ Запрос отправлен успешно!</strong><br>
+            Мы получили ваш запрос на удаление аккаунта. В течение 3 рабочих дней вы получите письмо с подтверждением на указанный email адрес.
+        </div>
+
+        <div class="contact-info">
+            <h3>📧 Контактная информация</h3>
+            <p>Если у вас возникли вопросы или проблемы с удалением аккаунта, свяжитесь с нами:</p>
+            <p><strong>Email:</strong> <a href="mailto:support@oxia.com">support@oxia.com</a></p>
+            <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                <strong>Примечание:</strong> Замените email адрес на ваш реальный адрес поддержки.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('deletionForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const email = document.getElementById('email').value;
+            
+            // Отключить кнопку отправки
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            
+            // Здесь должна быть логика отправки на сервер
+            // Для примера показываем сообщение об успехе через 1 секунду
+            
+            setTimeout(() => {
+                // В реальном приложении здесь должен быть запрос к вашему серверу
+                // Пример:
+                // fetch('/api/account-deletion-request', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({
+                //         email: email,
+                //         message: document.getElementById('message').value
+                //     })
+                // })
+                
+                successMessage.classList.add('show');
+                form.style.display = 'none';
+                
+                // Прокрутить к сообщению об успехе
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

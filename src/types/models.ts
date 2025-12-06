@@ -4,6 +4,7 @@ export interface Profile {
   heightCm: number | null;
   normMethod: 'auto' | 'manual';
   manualNormValue?: number | null;
+  registeredPlatform?: 'web' | 'ios' | 'android' | null;  // Платформа регистрации
 }
 
 export interface PEFRecord {

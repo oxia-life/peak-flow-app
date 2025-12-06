@@ -109,7 +109,10 @@ class SupabaseService {
       console.log('saveProfile: Saving profile for user:', user.id);
       console.log('saveProfile: Profile data:', profile);
 
-      const profileData = {
+      // Проверяем, есть ли уже профиль (чтобы не перезаписывать registered_platform)
+      const existingProfile = await this.getProfile();
+      
+      const profileData: any = {
         user_id: user.id,
         gender: profile.gender,
         birth_date: profile.birthDate,
@@ -118,6 +121,12 @@ class SupabaseService {
         manual_norm_value: profile.manualNormValue,
         updated_at: new Date().toISOString(),
       };
+
+      // Сохраняем платформу регистрации только при первом создании профиля
+      if (!existingProfile && profile.registeredPlatform) {
+        profileData.registered_platform = profile.registeredPlatform;
+        console.log('saveProfile: Setting registered_platform:', profile.registeredPlatform);
+      }
 
       console.log('saveProfile: Data to save:', profileData);
 
@@ -176,6 +185,7 @@ class SupabaseService {
         heightCm: data.height_cm,
         normMethod: data.norm_method,
         manualNormValue: data.manual_norm_value,
+        registeredPlatform: data.registered_platform,
       };
     } catch (error) {
       console.error('Error getting profile:', error);

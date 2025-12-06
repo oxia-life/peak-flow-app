@@ -124,12 +124,16 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupScreenPro
       }
     }
 
+    // Определяем платформу регистрации
+    const registeredPlatform = Platform.OS === 'web' ? 'web' : Platform.OS === 'ios' ? 'ios' : 'android';
+    
     const profile: Profile = {
       gender,
       birthDate,
       heightCm: heightNum,
       normMethod,
       manualNormValue: normMethod === 'manual' ? parseInt(manualNorm, 10) : null,
+      registeredPlatform,
     };
 
     try {
