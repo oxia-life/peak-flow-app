@@ -8,6 +8,8 @@ export default {
     userInterfaceStyle: "light",
     
     splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
       backgroundColor: "#2D6A93"
     },
     
@@ -38,7 +40,7 @@ export default {
         backgroundColor: "#1E4C60"
       },
       package: "com.oxia.peakflowdiary",
-      versionCode: 7,
+      versionCode: 8,
       permissions: []
     },
     
