@@ -38,10 +38,8 @@ export default {
         backgroundColor: "#1E4C60"
       },
       package: "com.oxia.peakflowdiary",
-      versionCode: 1,
-      permissions: [],
-      // Target API 35 для Google Play (требование с 2024)
-      targetSdkVersion: 35
+      versionCode: 2,
+      permissions: []
     },
     
     web: {
@@ -49,7 +47,17 @@ export default {
       bundler: "metro"
     },
     
-    plugins: [],
+    plugins: [
+      [
+        "expo-build-properties",
+        {
+          android: {
+            targetSdkVersion: 35,
+            compileSdkVersion: 35,
+          },
+        },
+      ],
+    ],
     
     extra: {
       eas: {
