@@ -1,9 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import AppNavigator from './src/AppNavigator';
+import SplashScreen from './src/components/SplashScreen';
 
 export default function App() {
+  // Показываем кастомный splash screen только для мобильных платформ
+  const [showSplash, setShowSplash] = useState(Platform.OS !== 'web');
+
+  useEffect(() => {
+    // Для мобильных платформ показываем splash screen 1.5 секунды
+    if (Platform.OS !== 'web') {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   useEffect(() => {
     // Регистрация Service Worker для PWA (только на веб)
     if (Platform.OS === 'web' && 'serviceWorker' in navigator) {
@@ -80,6 +95,11 @@ export default function App() {
       }
     }
   }, []);
+
+  // Показываем splash screen только для мобильных платформ
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   return (
     <>
