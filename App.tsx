@@ -1,9 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
+import * as SplashScreenModule from 'expo-splash-screen';
 import AppNavigator from './src/AppNavigator';
+import SplashScreen from './src/components/SplashScreen';
+
+// Предотвращаем автоскрытие нативного splash screen
+SplashScreenModule.preventAutoHideAsync();
 
 export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Здесь можно добавить загрузку ресурсов, шрифтов и т.д.
+        // Имитируем небольшую задержку для показа splash screen
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
   useEffect(() => {
     // Регистрация Service Worker для PWA (только на веб)
     if (Platform.OS === 'web' && 'serviceWorker' in navigator) {
@@ -81,13 +105,33 @@ export default function App() {
     }
   }, []);
 
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // Скрываем нативный splash screen
+      await SplashScreenModule.hideAsync();
+      // Через небольшую задержку скрываем кастомный splash
+      setTimeout(() => {
+        setShowSplash(false);
+      }, 300);
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return <SplashScreen />;
+  }
+
+  if (showSplash) {
+    return (
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <SplashScreen />
+      </View>
+    );
+  }
+
   return (
-    <>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <StatusBar style="light" />
       <AppNavigator />
-    </>
+    </View>
   );
 }
-
-
-
