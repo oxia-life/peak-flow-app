@@ -38,7 +38,7 @@ export default {
         backgroundColor: "#1E4C60"
       },
       package: "com.oxia.peakflowdiary",
-      versionCode: 2,
+      versionCode: 3,
       permissions: []
     },
     
@@ -48,14 +48,7 @@ export default {
     },
     
     plugins: [
-      [
-        "expo-build-properties",
-        {
-          android: {
-            targetSdkVersion: 35,
-          },
-        },
-      ],
+      "expo-build-properties",
     ],
     
     extra: {
