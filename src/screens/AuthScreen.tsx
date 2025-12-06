@@ -27,17 +27,10 @@ export default function AuthScreen() {
       return false;
     }
     
-    // Блокируем тестовые и временные email
-    const blockedPrefixes = ['test', 'demo', 'example', 'temp', 'temporary', 'fake', 'spam'];
-    const blockedDomains = ['tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email', 'mailinator.com'];
+    // Блокируем временные email домены (не блокируем префиксы — они могут быть у реальных пользователей)
+    const blockedDomains = ['tempmail.com', 'guerrillamail.com', '10minutemail.com', 'throwaway.email', 'mailinator.com', 'temp-mail.org', 'fakeinbox.com'];
     
-    const localPart = email.split('@')[0]?.toLowerCase();
     const domain = email.split('@')[1]?.toLowerCase();
-    
-    // Проверка на тестовые префиксы
-    if (blockedPrefixes.some(prefix => localPart.startsWith(prefix))) {
-      return false;
-    }
     
     // Проверка на временные домены
     if (blockedDomains.includes(domain)) {
