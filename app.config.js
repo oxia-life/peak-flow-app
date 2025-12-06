@@ -38,7 +38,7 @@ export default {
         backgroundColor: "#1E4C60"
       },
       package: "com.oxia.peakflowdiary",
-      versionCode: 4,
+      versionCode: 5,
       permissions: []
     },
     
@@ -47,9 +47,7 @@ export default {
       bundler: "metro"
     },
     
-    plugins: [
-      "expo-build-properties",
-    ],
+    plugins: [],
     
     extra: {
       eas: {
