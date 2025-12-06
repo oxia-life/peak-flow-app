@@ -120,7 +120,7 @@ export default function DatePicker({ value, onChange, error }: DatePickerProps) 
             <DateTimePicker
               value={date}
               mode="date"
-              display="default"
+              display="spinner"
               onChange={handleChange}
               maximumDate={new Date()}
               minimumDate={new Date(1900, 0, 1)}
