@@ -40,7 +40,7 @@ export default {
         backgroundColor: "#1E4C60"
       },
       package: "com.oxia.peakflowdiary",
-      versionCode: 10,
+      versionCode: 11,
       permissions: []
     },
     
